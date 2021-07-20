@@ -12,15 +12,18 @@ session = DBSession()
 
 def process_order(order):
     # 1. Insert this order into the order book
-    fields = ['buy_currency', 'sell_currency', 'buy_amount', 'sell_amount', 'sender_pk', 'receiver_pk']
-    order_obj = Order(**{f: order[f] for f in fields})
+    order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
+                      buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
+                      buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
+    # fields = ['buy_currency', 'sell_currency', 'buy_amount', 'sell_amount', 'sender_pk', 'receiver_pk']
+    # order_obj = Order(**{f: order[f] for f in fields})
     print("Order imported.")
     session.add(order_obj)
     session.commit()
 
     # 2. Check if there are any existing orders that match
     orders = [order for order in session.query(Order).filter(Order.filled is None).all()]
-    print("Order retrieved.")
+    print("Order retrieved. Order")
     for existing_oder in orders:
 
         print(existing_oder.id)
@@ -43,7 +46,8 @@ def process_order(order):
                     new_order_obj = Order(**{f: new_order_obj[f] for f in fields})
                 elif order_obj.sell_amount < existing_oder.buy_amount:
                     new_order_obj = Order(sender_pk=existing_oder.sender_pk, receiver_pk=existing_oder.receiver_pk,
-                                          buy_currency=existing_oder.buy_currency, sell_currency=existing_oder.sell_currency,
+                                          buy_currency=existing_oder.buy_currency,
+                                          sell_currency=existing_oder.sell_currency,
                                           buy_amount=existing_oder.buy_amount - order['sell_amount'],
                                           sell_amount=existing_oder.sell_amount - order['buy_amount'],
                                           creator_id=existing_oder.id)
