@@ -12,9 +12,10 @@ session = DBSession()
 
 def process_order(order):
     # 1. Insert this order into the order book
-    order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
-                      buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
-                      buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
+    if isinstance(order, dict):
+        order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
+                          buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
+                          buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
     session.add(order_obj)
     session.commit()
 
@@ -35,8 +36,8 @@ def process_order(order):
                 if existing_oder.sell_amount < order_obj.buy_amount:
                     new_order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
                                           buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
-                                          buy_amount=order['buy_amount'] - existing_oder['sell_amount'],
-                                          sell_amount=order['sell_amount'] - existing_oder['buy_amount'],
+                                          buy_amount=order['buy_amount'] - existing_oder.sell_amount,
+                                          sell_amount=order['sell_amount'] - existing_oder.buy_amount,
                                           creator_id=order_obj.id)
                     # new_order_obj = Order(**{f: new_order_obj[f] for f in fields})
                 elif order_obj.sell_amount < existing_oder.buy_amount:
