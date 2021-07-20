@@ -16,17 +16,15 @@ def process_order(order):
     order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
                       buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
                       buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
-    # fields = ['buy_currency', 'sell_currency', 'buy_amount', 'sell_amount', 'sender_pk', 'receiver_pk']
-    # order_obj = Order(**{f: order[f] for f in fields})
     print("Order imported.{}".format(order_obj.sell_currency))
     session.add(order_obj)
     session.commit()
 
     # 2. Check if there are any existing orders that match
     orders = [order for order in session.query(Order).filter(Order.filled is None).all()]
-    print("Order retrieved. Order")
+    print("Order retrieved. {}".format(len(orders)))
     for existing_oder in orders:
-        print("existing_oder.id {}".format(existing_oder.id))
+        print("existing_oder.id {}")
         if existing_oder.buy_currency == order_obj.sell_currency and \
                 existing_oder.sell_currency == order_obj.buy_currency:
             if existing_oder.sell_amount / existing_oder.buy_amount >= order_obj.buy_amount / order_obj.sell_amount:
