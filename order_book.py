@@ -12,19 +12,16 @@ session = DBSession()
 
 def process_order(order):
     # 1. Insert this order into the order book
-    print(order['sender_pk'])
     order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
                       buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
                       buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
-    print("Order imported.{}".format(order_obj.filled))
     session.add(order_obj)
     session.commit()
 
     # 2. Check if there are any existing orders that match
     orders = [order for order in session.query(Order).filter(Order.filled == None).all()]
-    print("Order retrieved. {}".format(len(orders)))
+    # print("Order retrieved. {}".format(len(orders)))
     for existing_oder in orders:
-        print("existing_oder.id {}")
         if existing_oder.buy_currency == order_obj.sell_currency and \
                 existing_oder.sell_currency == order_obj.buy_currency:
             if existing_oder.sell_amount / existing_oder.buy_amount >= order_obj.buy_amount / order_obj.sell_amount:
