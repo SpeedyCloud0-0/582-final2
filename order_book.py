@@ -12,12 +12,13 @@ session = DBSession()
 
 def process_order(order):
     # 1. Insert this order into the order book
+    print(order['sender_pk'])
     order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
                       buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
                       buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
     # fields = ['buy_currency', 'sell_currency', 'buy_amount', 'sell_amount', 'sender_pk', 'receiver_pk']
     # order_obj = Order(**{f: order[f] for f in fields})
-    print("Order imported.{}".format(order_obj.id))
+    print("Order imported.{}".format(order_obj.sell_currency))
     session.add(order_obj)
     session.commit()
 
