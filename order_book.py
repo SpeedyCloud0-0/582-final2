@@ -46,7 +46,8 @@ def process_order(order):
                                           buy_amount=existing_oder.buy_amount - order['sell_amount'],
                                           sell_amount=existing_oder.sell_amount - order['buy_amount'],
                                           creator_id=existing_oder.id)
-
+                else:
+                    break
                 # new_order_obj = Order(**{f: new_order_obj[f] for f in fields})
                 session.add(new_order_obj)
                 session.commit()
