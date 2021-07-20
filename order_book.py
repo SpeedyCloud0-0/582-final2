@@ -41,7 +41,7 @@ def process_order(order):
                                           buy_amount=order_obj.buy_amount - existing_oder.sell_amount,
                                           sell_amount=order_obj.sell_amount - existing_oder.buy_amount,
                                           creator_id=order_obj.id)
-                    # new_order_obj = Order(**{f: new_order_obj[f] for f in fields})
+
                 elif order_obj.sell_amount < existing_oder.buy_amount:
                     new_order_obj = Order(sender_pk=existing_oder.sender_pk, receiver_pk=existing_oder.receiver_pk,
                                           buy_currency=existing_oder.buy_currency,
@@ -51,11 +51,7 @@ def process_order(order):
                                           creator_id=existing_oder.id)
                 else:
                     break
-                # new_order_obj = Order(**{f: new_order_obj[f] for f in fields})
-                session.add(new_order_obj)
-                session.commit()
-                process_order(new_order_obj)
 
-    # 4. If there are multiple ways to fill an order
-
-    # pass
+    session.add(new_order_obj)
+    session.commit()
+    process_order(new_order_obj)
