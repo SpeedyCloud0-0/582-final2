@@ -36,18 +36,18 @@ def process_order(order):
                 session.commit()
                 # If one of the orders is not completely filled
                 if existing_oder.sell_amount < order_obj.buy_amount:
-                    new_order_obj = Order(sender_pk=order['sender_pk'], receiver_pk=order['receiver_pk'],
-                                          buy_currency=order['buy_currency'], sell_currency=order['sell_currency'],
-                                          buy_amount=order['buy_amount'] - existing_oder.sell_amount,
-                                          sell_amount=order['sell_amount'] - existing_oder.buy_amount,
+                    new_order_obj = Order(sender_pk=order_obj.sender_pk, receiver_pk=order_obj.receiver_pk,
+                                          buy_currency=order_obj.buy_currency, sell_currency=order_obj.sell_currency,
+                                          buy_amount=order_obj.buy_amount - existing_oder.sell_amount,
+                                          sell_amount=order_obj.sell_amount - existing_oder.buy_amount,
                                           creator_id=order_obj.id)
                     # new_order_obj = Order(**{f: new_order_obj[f] for f in fields})
                 elif order_obj.sell_amount < existing_oder.buy_amount:
                     new_order_obj = Order(sender_pk=existing_oder.sender_pk, receiver_pk=existing_oder.receiver_pk,
                                           buy_currency=existing_oder.buy_currency,
                                           sell_currency=existing_oder.sell_currency,
-                                          buy_amount=existing_oder.buy_amount - order['sell_amount'],
-                                          sell_amount=existing_oder.sell_amount - order['buy_amount'],
+                                          buy_amount=existing_oder.buy_amount - order_obj.sell_amount,
+                                          sell_amount=existing_oder.sell_amount - order_obj.buy_amount,
                                           creator_id=existing_oder.id)
                 else:
                     break
