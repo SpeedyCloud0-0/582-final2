@@ -19,9 +19,10 @@ def process_order(order):
     session.commit()
 
     # 2. Check if there are any existing orders that match
-    orders = session.query(Order).filter(Order.filled is None).all()
+    orders = [order for order in session.query(Order).filter(Order.filled is None).all()]
     print("Order retrieved.")
     for existing_oder in orders:
+
         print(existing_oder.id)
         if existing_oder.buy_currency == order_obj.sell_currency and \
                 existing_oder.sell_currency == order_obj.buy_currency:
