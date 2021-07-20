@@ -28,7 +28,7 @@ def process_order(order):
                 # If a match is found
                 existing_oder.filled = datetime.now()
                 order_obj.filled = datetime.now()
-                existing_oder.counterparty_id = order.id
+                existing_oder.counterparty_id = order_obj.id
                 order_obj.counterparty_id = existing_oder.id
                 session.commit()
                 # If one of the orders is not completely filled
