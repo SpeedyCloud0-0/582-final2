@@ -17,7 +17,7 @@ def process_order(order):
                       buy_amount=order['buy_amount'], sell_amount=order['sell_amount'])
     # fields = ['buy_currency', 'sell_currency', 'buy_amount', 'sell_amount', 'sender_pk', 'receiver_pk']
     # order_obj = Order(**{f: order[f] for f in fields})
-    print("Order imported.")
+    print("Order imported.{}".format(order_obj.id))
     session.add(order_obj)
     session.commit()
 
@@ -25,8 +25,7 @@ def process_order(order):
     orders = [order for order in session.query(Order).filter(Order.filled is None).all()]
     print("Order retrieved. Order")
     for existing_oder in orders:
-
-        print(existing_oder.id)
+        print("existing_oder.id {}".format(existing_oder.id))
         if existing_oder.buy_currency == order_obj.sell_currency and \
                 existing_oder.sell_currency == order_obj.buy_currency:
             if existing_oder.sell_amount / existing_oder.buy_amount >= order_obj.buy_amount / order_obj.sell_amount:
