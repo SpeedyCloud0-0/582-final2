@@ -54,7 +54,7 @@ def process_order(order):
                                   sell_amount=existing_oder.sell_amount - order_obj.buy_amount,
                                   creator_id=existing_oder.id)
         else:
-            pass
+            return
         session.add(new_order_obj)
         session.commit()
         process_order(new_order_obj)
